@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Mahamudra.Tapper.Tests": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
