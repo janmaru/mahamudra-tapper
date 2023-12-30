@@ -4,11 +4,21 @@
 What this library is not going to address:
 - Is there any need for any abstraction, in the larger sense?
 - Does Dappper overcome the IRepository pattern compared to Entity Framework simple implementation?
-- Do we need to learn SQL at all?
+- Do we need to learn SQL at all? 
 
+## How to
+From the root of the solution, where the file "Mahamudra.Tapper.sln" is.
+```powershell
+docker compose up -d
+```
+
+Then from the tests folder: "Mahamudra.Tapper.Tests"
+```powershell
+dotnet test
+```
 ## Features
 
-- Commands and queries are logically separated
+- Commands and queries are logically separated.
 ```csharp
         using var context = await _factory.Create();
         var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
@@ -28,7 +38,7 @@ What this library is not going to address:
         })); 
         Assert.That(product!.Name, Is.EqualTo(expectedProductName));
 ```
-- Using transactions
+- Using transactions.
  _Using transactions is not evil in itself, maybe it has no meaning in a world where you can't even synchronize your watch._ 
 ```csharp
         var productId = await context.Execute(new ProductCreateCommandPersistence(command));
@@ -40,7 +50,7 @@ What this library is not going to address:
         Assert.That(productId, Is.GreaterThan(0));
         context.Commit();
 ``` 
-- Persistence can be wrapped with any CQRS pattern
+- Persistence can be wrapped with any CQRS pattern.
 _MediatR it's a way of implementing CQRS. It's not the only way. And probably is not even implementing the mediator pattern._  
 ```csharp
         var brand  = await _handler.Send( 
@@ -82,4 +92,25 @@ _MediatR it's a way of implementing CQRS. It's not the only way. And probably is
         var builderTemplate = builder.AddTemplate($"Select /**select**/ from /*schema*/ tableName} /**where**/ ");
         return builderTemplate.RawSql;
     }
+```  
+
+- Using stored procedures
+```csharp
+
+public class BrandGetByIdQueryPersistence(BrandGetByIdQuery query) : DapperBase, IQuery<Brand?>
+{
+    private readonly BrandGetByIdQuery _query = query;
+    private static readonly string _sqlSelect = @"/*schema*/ [uspGetBrandById]";
+
+    public async Task<Brand?> Select(IDbConnection connection, IDbTransaction transaction, CancellationToken ct = default, string? schema = null)
+    {
+        return (await ((IPersistence)this).SelectAsync<Brand>(connection!, _sqlSelect.Add(schema), new
+        {
+            id = _query.Id
+        },
+        transaction,
+        CommandType.StoredProcedure))
+        .FirstOrDefault();
+    }
+}
 ```  

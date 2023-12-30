@@ -1,11 +1,7 @@
 ﻿version: '3.8'
 
-services:
-  tests:
-    build:
-      context: .
-      dockerfile: Dockerfile.tests
-  mssqldatabase: 
+services: 
+  mssqldatabase:  
     build:
       context: ./Data
       dockerfile: Dockerfile.mssqldatabase 
@@ -20,4 +16,4 @@ services:
     volumes:
       - mssqldata:/var/opt/mssql   
 volumes:
-  mssqldata:     
+  mssqldata:   

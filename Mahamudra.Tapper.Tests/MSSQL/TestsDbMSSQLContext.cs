@@ -149,6 +149,7 @@ public class TestsDbMSSQLContext
         Assert.That(product!.ListPrice, Is.EqualTo(expectedPrice));
         Assert.That(product!.ModelYear, Is.EqualTo(expectedModelYear));
     }
+
     [Test]
     public async Task ProductCreateCommand_ShouldInsertProduct_WithCommandHandler()
     {
@@ -275,5 +276,28 @@ public class TestsDbMSSQLContext
             Id = productId.Value
         }));
         Assert.That(product, Is.Null);
+    }
+
+    [Test]
+    public async Task BrandGetByIdQuery_ShouldGetBrand_WithStoreProcedure()
+    {
+        var authInfo = BasicAuthenticationInfo; 
+        var expectedBrandName = Random.Shared.NextSingle().ToString();
+        using var context = await _factory.Create(new MSSQLTransaction()); 
+        var brandId = await context.Execute(new BrandCreateCommandPersistence(
+            new BrandCreateCommand(authInfo)
+            {
+                Name = expectedBrandName
+            }));
+        Assert.That(brandId, Is.GreaterThan(0));
+        context.Commit();
+
+        var brand = await context.Query(new BrandGetByIdQueryPersistence(new BrandGetByIdQuery(authInfo)
+        {
+             Id = brandId.Value
+        }));  
+ 
+        Assert.That(brand!.Name, Is.EqualTo(expectedBrandName));
+        Assert.That(brand!.Id, Is.EqualTo(brandId.Value));
     }
 }

@@ -113,3 +113,20 @@ CREATE TABLE production.stocks (
 	FOREIGN KEY (store_id) REFERENCES sales.stores (store_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (product_id) REFERENCES production.products (product_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- create storedProcedures  
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [production].[uspGetBrandById]  
+    @id int
+AS    
+    SET NOCOUNT ON;  
+    SELECT brand_id as id, brand_name as name 
+    FROM production.brands
+    WHERE brand_id = @id; 
+GO

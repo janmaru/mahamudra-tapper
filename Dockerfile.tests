@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj", "Mahamudra.Tapper.Tests/"]
 COPY ["Mahamudra.Tapper/Mahamudra.Tapper.csproj", "Mahamudra.Tapper/"]
 RUN dotnet restore "./Mahamudra.Tapper.Tests/./Mahamudra.Tapper.Tests.csproj"
-COPY ./ ./
+COPY . .
 WORKDIR "/src/Mahamudra.Tapper.Tests"
 RUN dotnet build "./Mahamudra.Tapper.Tests.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

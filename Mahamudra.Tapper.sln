@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mahamudra.Tapper.Tests", "M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{73E30F9D-DA66-475D-BDE9-FC2E8B72D499}"
 	ProjectSection(SolutionItems) = preProject
+		.env = .env
 		docker-compose.yml = docker-compose.yml
 		Data\Dockerfile.mssqldatabase = Data\Dockerfile.mssqldatabase
 		Dockerfile.tests = Dockerfile.tests
