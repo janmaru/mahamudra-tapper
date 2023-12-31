@@ -300,4 +300,34 @@ public class TestsDbMSSQLContext
         Assert.That(brand!.Name, Is.EqualTo(expectedBrandName));
         Assert.That(brand!.Id, Is.EqualTo(brandId.Value));
     }
+
+    [Test]
+    public async Task BrandAndCategoryAllQuery_ShouldGetBrandCategoryDto_WithMultipleQuery()
+    {
+        var authInfo = BasicAuthenticationInfo;
+        var expectedName = Random.Shared.NextSingle().ToString();
+        using var context = await _factory.Create(new MSSQLTransaction());
+        var brandId = await context.Execute(new BrandCreateCommandPersistence(
+            new BrandCreateCommand(authInfo)
+            {
+                Name = expectedName
+            }));
+        Assert.That(brandId, Is.GreaterThan(0));
+        var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
+        new CategoryCreateCommand(authInfo)
+        {
+            Name = expectedName
+        }));
+        Assert.That(categoryId, Is.GreaterThan(0));
+        context.Commit();
+
+        var categoryBrand = await context.Query(new BrandCategoryGetAllByQueryPersistence());
+        Assert.That(categoryBrand, !Is.Null);
+        Assert.That(categoryBrand.Brands, !Is.Null);
+        Assert.That(categoryBrand.Categories, !Is.Null);
+        var expecteBrands = categoryBrand.Brands.Where(x=>x.Name == expectedName).ToList();
+        var expecteCategories = categoryBrand.Categories.Where(x => x.Name == expectedName).ToList();
+        Assert.That(expecteBrands.Count(), Is.EqualTo(1));
+        Assert.That(expecteCategories.Count(), Is.EqualTo(1));
+    }
 }
