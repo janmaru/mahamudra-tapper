@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using Dapper;
 using Mahamudra.Tapper.Interfaces;
@@ -41,6 +43,20 @@ namespace Mahamudra.Tapper
             int? commandTimeout = null)
         {
             return await connection.QueryAsync<T>(sqlQuery, parameters, transaction, commandTimeout, type); 
+        }
+
+        public async Task<IEnumerable<T>> SelectAsync<T, S>(
+            IDbConnection connection,
+            string sqlQuery,
+            Func<T,S,T> map,
+            string splitOn,
+            object parameters,
+            IDbTransaction transaction,
+            CommandType type,
+            bool buffered,
+            int? commandTimeout = null)
+        {
+            return await connection.QueryAsync<T, S, T>(sqlQuery, map, parameters, transaction, buffered, splitOn, commandTimeout, type);
         }
 
         public async Task<GridReader> SelectMultipleAsync<T>(

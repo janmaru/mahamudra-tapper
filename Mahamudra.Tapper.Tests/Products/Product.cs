@@ -28,5 +28,6 @@ public class Product
 
     [Column("list_price")]
     [Required]
-    public decimal ListPrice { get; set; }
+    public decimal ListPrice { get; set; } 
+    public Category? Category { get; set; }
 } 

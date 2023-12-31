@@ -322,12 +322,57 @@ public class TestsDbMSSQLContext
         context.Commit();
 
         var categoryBrand = await context.Query(new BrandCategoryGetAllByQueryPersistence());
-        Assert.That(categoryBrand, !Is.Null);
-        Assert.That(categoryBrand.Brands, !Is.Null);
-        Assert.That(categoryBrand.Categories, !Is.Null);
+        Assert.That(categoryBrand, Is.Not.Null);
+        Assert.That(categoryBrand.Brands, Is.Not.Null);
+        Assert.That(categoryBrand.Categories, Is.Not.Null);
         var expecteBrands = categoryBrand.Brands.Where(x=>x.Name == expectedName).ToList();
         var expecteCategories = categoryBrand.Categories.Where(x => x.Name == expectedName).ToList();
         Assert.That(expecteBrands.Count(), Is.EqualTo(1));
         Assert.That(expecteCategories.Count(), Is.EqualTo(1));
+    }
+
+
+    [Test]
+    public async Task ProductCategoryGetByIdQueryPersistence_ShouldSucceed_WithInnerJoin()
+    {
+        var authInfo = BasicAuthenticationInfo;
+        var expectedProductName = Random.Shared.NextSingle().ToString();
+        var expectedPrice = 10.5M;
+        var expectedModelYear = (short)DateTime.UtcNow.Year;
+        var command = new ProductCreateCommand(authInfo)
+        {
+            Name = expectedProductName,
+            ListPrice = expectedPrice,
+            ModelYear = expectedModelYear
+        };
+
+        var expectedCategoryName = Random.Shared.NextSingle().ToString();
+        var expectedBrandName = Random.Shared.NextSingle().ToString();
+        using var context = await _factory.Create(new MSSQLTransaction());
+        var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
+            new CategoryCreateCommand(authInfo)
+            {
+                Name = expectedCategoryName
+            }));
+        Assert.That(categoryId, Is.GreaterThan(0));
+        var brand = await _handler.Send(
+            new BrandCreateCommand(authInfo)
+            {
+                Name = expectedBrandName
+            });
+        Assert.That(brand.Id, Is.GreaterThan(0));
+        command.BrandId = brand.Id;
+        command.CategoryId = categoryId.Value;
+        var productId = await context.Execute(new ProductCreateCommandPersistence(command));
+        Assert.That(productId, Is.GreaterThan(0));
+        context.Commit();
+
+        var product = await context.Query(new ProductCategoryGetByIdQueryPersistence(new ProductGetByIdQuery(authInfo)
+        {
+            Id = productId.Value
+        }));
+        Assert.That(product, Is.Not.Null);
+        Assert.That(product.Category, Is.Not.Null);
+        Assert.That(product.Category.Name,  Is.EqualTo(expectedCategoryName));
     }
 }
