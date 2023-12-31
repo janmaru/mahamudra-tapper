@@ -39,7 +39,7 @@ dotnet test
         Assert.That(product!.Name, Is.EqualTo(expectedProductName));
 ```
 - Using transactions.
-- _Using transactions is not evil in itself, maybe it has no meaning in a world where you can't even synchronize your watch._ 
+(_Using transactions is not evil in itself, maybe it has no meaning in a world where you can't even synchronize your watch._)
 ```csharp
         var productId = await context.Execute(new ProductCreateCommandPersistence(command));
         Assert.That(productId, Is.GreaterThan(0));
@@ -51,7 +51,7 @@ dotnet test
         context.Commit();
 ``` 
 - Persistence can be wrapped with any CQRS pattern.
-- _MediatR it's a way of implementing CQRS. It's not the only way. And probably is not even implementing the mediator pattern._  
+(_MediatR it's a way of implementing CQRS. It's not the only way. And probably is not even implementing the mediator pattern._)
 ```csharp
         var brand  = await _handler.Send( 
             new BrandCreateCommand(authInfo)
@@ -135,7 +135,7 @@ public class BrandCategoryGetAllByQueryPersistence() : DapperBase, IQuery<BrandC
 ```  
 
 - Using One-To-Many Relationships
-- _Using split-on and builder._  
+(_Using split-on and builder._)  
 ```csharp
         return (await ((IPersistence)this).SelectAsync<Product, Category>(
             connection!,
