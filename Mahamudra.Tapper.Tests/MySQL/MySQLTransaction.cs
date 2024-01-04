@@ -1,6 +1,6 @@
 ﻿using Mahamudra.Tapper.Interfaces;
 
 namespace Mahamudra.Tapper.Tests.MSSQL; 
-public class MSSQLTransaction : ITransaction
+public class MySQLTransaction: ITransaction
 {
 } 

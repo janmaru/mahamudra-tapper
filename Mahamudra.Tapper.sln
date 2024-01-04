@@ -14,8 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "El
 		Data\Dockerfile.mssqldatabase = Data\Dockerfile.mssqldatabase
 		Dockerfile.tests = Dockerfile.tests
 		Data\entrypoint.sh = Data\entrypoint.sh
+		Data\mysql_setup.sql = Data\mysql_setup.sql
 		README.md = README.md
-		Data\setup.sql = Data\setup.sql
+		Data\mssql_setup.sql = Data\mssql_setup.sql
 	EndProjectSection
 EndProject
 Global

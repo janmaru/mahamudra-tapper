@@ -5,9 +5,9 @@ services:
     build:
       context: ./Data
       dockerfile: Dockerfile.mssqldatabase 
-    container_name: tapper_db
+    container_name: tapper_mssql
     hostname: tapper_infra_tests 
-    restart: unless-stopped
+    restart: always   
     environment:
       SA_PASSWORD: "PaSSw0rd123!"
       ACCEPT_EULA: "Y"
@@ -15,5 +15,23 @@ services:
       - "5434:1433" 
     volumes:
       - mssqldata:/var/opt/mssql   
+  mysqldatabase:
+    image: mysql
+    container_name: tapper_mysql 
+    hostname: tapper_infra_tests 
+    restart: always    
+    volumes:
+     - mysqldata:/var/lib/mysql
+     - "./data/mysql_setup.sql:/docker-entrypoint-initdb.d/mysql_setup.sql"   
+    environment:
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'PaSSw0rd123!'   
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: 'PaSSw0rd123!'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'   
 volumes:
-  mssqldata:   
+  mssqldata: 
+  mysqldata:   

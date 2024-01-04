@@ -122,7 +122,7 @@ public class TestsDbMSSQLContext
 
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction());
+        using var context = await _factory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -166,7 +166,7 @@ public class TestsDbMSSQLContext
 
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction());
+        using var context = await _factory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -210,7 +210,7 @@ public class TestsDbMSSQLContext
 
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction());
+        using var context = await _factory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -252,7 +252,7 @@ public class TestsDbMSSQLContext
 
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction());
+        using var context = await _factory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -283,7 +283,7 @@ public class TestsDbMSSQLContext
     {
         var authInfo = BasicAuthenticationInfo; 
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction()); 
+        using var context = await _factory.Create(new MySQLTransaction()); 
         var brandId = await context.Execute(new BrandCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
@@ -306,7 +306,7 @@ public class TestsDbMSSQLContext
     {
         var authInfo = BasicAuthenticationInfo;
         var expectedName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction());
+        using var context = await _factory.Create(new MySQLTransaction());
         var brandId = await context.Execute(new BrandCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
@@ -348,7 +348,7 @@ public class TestsDbMSSQLContext
 
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MSSQLTransaction());
+        using var context = await _factory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
