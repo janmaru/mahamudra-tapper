@@ -31,9 +31,9 @@ public static class ServicesProvider
         // Microsoft SQL Server ---start
         var mSSQLConnectionString = options!.MSSQL!.ConnectionString ??
                       throw new TapperException("MSSQL Db connection string not configured");
- 
-        services.AddSingleton<IProductionDbContextFactory>((IProductionDbContextFactory)new DbMySQLContextFactory(mSSQLConnectionString, options!.MSSQL!.SchemaProduction!));
-        services.AddSingleton<ISalesDbContextFactory>((ISalesDbContextFactory)new DbMySQLContextFactory(mSSQLConnectionString, options!.MSSQL!.SchemaSales!));
+
+        services.AddSingleton<IProductionDbContextFactory>(new DbMSSQLContextFactor(mSSQLConnectionString, options!.MSSQL!.SchemaProduction!));
+        services.AddSingleton<ISalesDbContextFactory>(new DbMSSQLContextFactor(mSSQLConnectionString, options!.MSSQL!.SchemaSales!));
 
         // Microsoft SQL Server --- end
 
