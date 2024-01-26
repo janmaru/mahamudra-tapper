@@ -1,4 +1,5 @@
-﻿using Mahamudra.Tapper.Exceptions;
+﻿using Azure;
+using Mahamudra.Tapper.Exceptions;
 using Mahamudra.Tapper.Tests.Common;
 using Mahamudra.Tapper.Tests.MSSQL;
 using Microsoft.Extensions.Configuration;
@@ -29,9 +30,11 @@ public static class ServicesProvider
 
         // Microsoft SQL Server ---start
         var mSSQLConnectionString = options!.MSSQL!.ConnectionString ??
-                      throw new TapperException("MSSQL Db connection string not configured"); 
-        services.AddSingleton<IProductionDbContextFactory>(new DbMSSQLContextFactory(mSSQLConnectionString, options!.MSSQL!.SchemaProduction!));
-        services.AddSingleton<ISalesDbContextFactory>(new DbMSSQLContextFactory(mSSQLConnectionString, options!.MSSQL!.SchemaSales!));
+                      throw new TapperException("MSSQL Db connection string not configured");
+ 
+        services.AddSingleton<IProductionDbContextFactory>((IProductionDbContextFactory)new DbMySQLContextFactory(mSSQLConnectionString, options!.MSSQL!.SchemaProduction!));
+        services.AddSingleton<ISalesDbContextFactory>((ISalesDbContextFactory)new DbMySQLContextFactory(mSSQLConnectionString, options!.MSSQL!.SchemaSales!));
+
         // Microsoft SQL Server --- end
 
         // MySQL ---start

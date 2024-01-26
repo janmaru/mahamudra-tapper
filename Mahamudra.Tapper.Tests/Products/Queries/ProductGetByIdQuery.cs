@@ -2,8 +2,12 @@
 
 namespace Mahamudra.Tapper.Tests.Products.Queries;
 
-public class ProductGetByIdQuery(IAuthenticationInfo authenticationInfo)
+public class ProductGetByIdQuery 
 {
-    public IAuthenticationInfo AuthenticationInfo { get; internal set; } = authenticationInfo;
+    public ProductGetByIdQuery(IAuthenticationInfo authenticationInfo)
+    {
+        this.AuthenticationInfo = authenticationInfo;
+    }
+    public IAuthenticationInfo AuthenticationInfo { get; internal set; } 
     public int Id { get; set; }
 } 

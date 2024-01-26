@@ -5,10 +5,14 @@ using System.Data;
 namespace Mahamudra.Tapper.Tests.Products.Commands.Persistence
 {
 
-    public sealed class ProductCreateCommandPersistence(ProductCreateCommand command) : DapperBase, ICommand<int?>
+    public sealed class ProductCreateCommandPersistence : DapperBase, ICommand<int?>
     {
+        public ProductCreateCommandPersistence(ProductCreateCommand command)
+        {
+            this._command = command;
+        }
 
-        private readonly ProductCreateCommand _command = command;
+        private readonly ProductCreateCommand _command;
 
         private static readonly string _sqlInsert = @"
 INSERT INTO /*schema*/ products 

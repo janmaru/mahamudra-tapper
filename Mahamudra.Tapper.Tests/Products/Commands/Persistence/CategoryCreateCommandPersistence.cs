@@ -5,10 +5,14 @@ using System.Data;
 namespace Mahamudra.Tapper.Tests.Products.Commands.Persistence
 {
 
-    public sealed class CategoryCreateCommandPersistence(CategoryCreateCommand command) : DapperBase, ICommand<int?>
+    public sealed class CategoryCreateCommandPersistence : DapperBase, ICommand<int?>
     {
+        public CategoryCreateCommandPersistence(CategoryCreateCommand command)
+        {
+            this._command = command;
+        }
 
-        private readonly CategoryCreateCommand _command = command;
+        private readonly CategoryCreateCommand _command;
 
         private static readonly string _sqlInsert = @"
 INSERT INTO /*schema*/ categories 

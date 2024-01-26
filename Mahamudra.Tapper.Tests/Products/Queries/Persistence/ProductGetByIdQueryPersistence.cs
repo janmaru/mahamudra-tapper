@@ -4,9 +4,14 @@ using System.Data;
 
 namespace Mahamudra.Tapper.Tests.Products.Queries.Persistence;
 
-public class ProductGetByIdQueryPersistence(ProductGetByIdQuery query) : DapperBase, IQuery<Product?>
+public class ProductGetByIdQueryPersistence : DapperBase, IQuery<Product?>
 {
-    private readonly ProductGetByIdQuery _query = query;
+    public ProductGetByIdQueryPersistence(ProductGetByIdQuery query)
+    {
+        this._query = query;
+    }
+
+    private readonly ProductGetByIdQuery _query;
     private static readonly string _sqlSelect = @"
 SELECT product_id as id,
        product_name as name,

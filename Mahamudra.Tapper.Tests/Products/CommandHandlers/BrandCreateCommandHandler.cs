@@ -6,12 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Mahamudra.Tapper.Tests.Products.CommandHandlers;
 
-public class BrandCreateCommandHandler(
-     IProductionDbContextFactory factory,
-     ILogger<BrandCreateCommandHandler> logger) : IRequestHandler<BrandCreateCommand, Brand>
+public class BrandCreateCommandHandler : IRequestHandler<BrandCreateCommand, Brand>
 {
-    private readonly IProductionDbContextFactory _factory = factory;
-    private readonly ILogger<BrandCreateCommandHandler> _logger = logger;
+    private readonly IProductionDbContextFactory _factory;
+    private readonly ILogger<BrandCreateCommandHandler> _logger;
+
+    public BrandCreateCommandHandler(
+     IProductionDbContextFactory factory,
+     ILogger<BrandCreateCommandHandler> logger)
+    {
+        this._factory = factory;
+        this._logger = logger;
+    }
 
     public async Task<Brand> Handle(BrandCreateCommand command, CancellationToken ct)
     {

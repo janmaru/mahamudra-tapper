@@ -3,12 +3,18 @@ using MySql.Data.MySqlClient;
 
 namespace Mahamudra.Tapper.Tests.MSSQL;
 
-public class DbMySQLContextFactory(string connectionString, string database) : IDbContextFactory,  
+public class DbMySQLContextFactory  : IDbContextFactory,  
     IProductionMySQLDbContextFactory,
     ISalesMySQLDbContextFactory
 {
-    private readonly string _db = database;
-    private readonly string _connectionString = connectionString;
+    private readonly string _db;
+    private readonly string _connectionString;
+
+    public DbMySQLContextFactory(string connectionString, string database)
+    {
+        this._connectionString = connectionString;
+        this._db = database;
+    }
 
     public async Task<IDbContext> Create(
         ITransaction transactional,

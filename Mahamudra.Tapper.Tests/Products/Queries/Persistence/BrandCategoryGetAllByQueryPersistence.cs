@@ -6,9 +6,14 @@ using System.Data;
 
 namespace Mahamudra.Tapper.Tests.Products.Queries.Persistence;
 
-public class BrandCategoryGetAllByQueryPersistence() : DapperBase, IQuery<BrandCategoryDto?>
+public class BrandCategoryGetAllByQueryPersistence  : DapperBase, IQuery<BrandCategoryDto?>
 {
     private static readonly string _sqlSelect = BrandSQLBuilder.SelectAll() + ";" + CategorySQLBuilder.SelectAll();
+
+    public BrandCategoryGetAllByQueryPersistence()
+    {
+
+    }
 
     public async Task<BrandCategoryDto?> Select(IDbConnection connection, IDbTransaction transaction, CancellationToken ct = default, string? schema = null)
     {

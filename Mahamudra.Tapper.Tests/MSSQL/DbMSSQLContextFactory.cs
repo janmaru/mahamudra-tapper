@@ -3,10 +3,15 @@ using Microsoft.Data.SqlClient;
 
 namespace Mahamudra.Tapper.Tests.MSSQL;
 
-public class DbMSSQLContextFactory(string connectionString, string schema) : IDbContextFactory, IProductionDbContextFactory, ISalesDbContextFactory
+public class DbMSSQLContextFactor : IDbContextFactory, IProductionDbContextFactory, ISalesDbContextFactory
 {
-    private readonly string _schema = schema;
-    private readonly string _connectionString = connectionString;
+    private readonly string _schema;
+    private readonly string _connectionString;
+    public DbMSSQLContextFactor(string connectionString, string schema)
+    {
+        this._schema = schema;
+        this._connectionString = connectionString;
+    }
 
     public async Task<IDbContext> Create(
         ITransaction transactional,

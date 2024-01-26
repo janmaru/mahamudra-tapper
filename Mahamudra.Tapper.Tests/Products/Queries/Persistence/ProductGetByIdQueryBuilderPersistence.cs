@@ -5,10 +5,15 @@ using System.Data;
 
 namespace Mahamudra.Tapper.Tests.Products.Queries.Persistence;
 
-public class ProductGetByIdQueryBuilderPersistence(ProductGetByIdQuery query) : DapperBase, IQuery<Product?>
+public class ProductGetByIdQueryBuilderPersistence : DapperBase, IQuery<Product?>
 {
-    private readonly ProductGetByIdQuery _query = query;
+    private readonly ProductGetByIdQuery _query;
     private static readonly string _sqlSelect = ProductSQLBuilder.SelectAllById();
+
+    public ProductGetByIdQueryBuilderPersistence(ProductGetByIdQuery query)
+    {
+        this._query = query;
+    }
 
     public async Task<Product?> Select(IDbConnection connection, IDbTransaction transaction, CancellationToken ct = default, string? schema = null)
     {
