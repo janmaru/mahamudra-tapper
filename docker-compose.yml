@@ -1,0 +1,61 @@
+﻿services:
+  mssqldatabase:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: tapper_mssql
+    hostname: tapper_infra_tests
+    environment:
+      SA_PASSWORD: "PaSSw0rd123!@"
+      ACCEPT_EULA: "Y"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-Usa", "-P", "PaSSw0rd123!@", "-Q", "select 1", "-C"]
+      interval: 30s
+      retries: 10
+      start_period: 80s
+    ports:
+      - "5434:1433"
+    volumes:
+      - mssqldata:/var/opt/mssql
+
+  # Servizio per l'inizializzazione dello schema MSSQL
+  mssql_init:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: tapper_mssql_init
+    environment:
+      SA_PASSWORD: "PaSSw0rd123!@"
+      ACCEPT_EULA: "Y"
+    depends_on:
+      mssqldatabase:
+        condition: service_healthy
+    volumes:
+      - "./Data/mssql_setup.sql:/usr/src/app/mssql_setup.sql"
+    command: >
+      bash -c "
+        echo 'Waiting for SQL Server to be fully ready...' &&
+        /opt/mssql-tools18/bin/sqlcmd -S tapper_infra_tests -U sa -P 'PaSSw0rd123!@' -i /usr/src/app/mssql_setup.sql -C &&
+        echo 'SQL Server setup script executed successfully.' ||
+        (echo 'Error executing SQL Server setup script!' && exit 1)
+      "
+    restart: 'no'
+
+  mysqldatabase:
+    image: mysql
+    container_name: tapper_mysql
+    hostname: tapper_infra_tests
+    restart: always
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - "./data/mysql_setup.sql:/docker-entrypoint-initdb.d/mysql_setup.sql"
+    environment:
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'PaSSw0rd123!'
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: 'PaSSw0rd123!'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+
+volumes:
+  mssqldata:
+  mysqldata:
