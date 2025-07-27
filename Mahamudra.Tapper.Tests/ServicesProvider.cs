@@ -46,7 +46,7 @@ public static class ServicesProvider
         services.AddSingleton<ISalesMySQLDbContextFactory>(new DbMySQLContextFactory(mySQLConnectionStringSales, options!.MySQL!.SchemaSales!));
         // MySQL --- end
 
-        services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(RootInfrastructure).Assembly));
+        services.AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
 
         services.AddLogging();
 

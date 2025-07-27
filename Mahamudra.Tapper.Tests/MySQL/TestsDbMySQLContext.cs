@@ -4,7 +4,7 @@ using Mahamudra.Tapper.Tests.Products.Commands;
 using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
 using Mahamudra.Tapper.Tests.Products.Queries;
 using Mahamudra.Tapper.Tests.Products.Queries.Persistence;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace Mahamudra.Tapper.Tests.MySQL;

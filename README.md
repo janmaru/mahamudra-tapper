@@ -16,7 +16,7 @@ What this library is not going to address:
 - Target Framework: `net9.0`
 - Database Drivers: `MySql.Data 8.3.0`, `Microsoft.Data.SqlClient 5.1.4`
 - Test Framework: `NUnit 4.0.1`
-- Additional Features: `MediatR 12.2.0`, `Dapper.SqlBuilder 2.0.78`
+- Additional Features: `Mediator 2.1.7` (high-performance source generator), `Dapper.SqlBuilder 2.0.78`
 
 **Database Support:**
 - **MySQL 8.0** (via Docker container on port 3306)
@@ -195,7 +195,7 @@ public async Task Transaction_ShouldRollbackOnException()
         context.Commit();
 ``` 
 - Persistence can be wrapped with any CQRS pattern.
-(_MediatR it's a way of implementing CQRS. It's not the only way. And probably is not even implementing the mediator pattern._)
+(_Mediator library provides high-performance CQRS implementation using source generators for zero-allocation mediator pattern._)
 ```csharp
         var brand  = await _handler.Send( 
             new BrandCreateCommand(authInfo)

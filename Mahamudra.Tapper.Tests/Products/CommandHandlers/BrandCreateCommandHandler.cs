@@ -1,7 +1,7 @@
 ﻿using Mahamudra.Tapper.Tests.MSSQL;
 using Mahamudra.Tapper.Tests.Products.Commands;
 using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace Mahamudra.Tapper.Tests.Products.CommandHandlers;
@@ -19,7 +19,7 @@ public class BrandCreateCommandHandler : IRequestHandler<BrandCreateCommand, Bra
         this._logger = logger;
     }
 
-    public async Task<Brand> Handle(BrandCreateCommand command, CancellationToken ct)
+    public async ValueTask<Brand> Handle(BrandCreateCommand command, CancellationToken ct)
     {
         //validation
         if (string.IsNullOrEmpty(command.Name) || command.Name.Length > 255)

@@ -1,5 +1,5 @@
 ﻿using Mahamudra.Tapper.Tests.Common;
-using MediatR;
+using Mediator;
 
 namespace Mahamudra.Tapper.Tests.Products.Commands;
 public sealed class BrandCreateCommand : IRequest<Brand>
