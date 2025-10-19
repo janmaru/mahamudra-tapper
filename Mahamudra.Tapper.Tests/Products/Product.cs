@@ -1,33 +1,135 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Mahamudra.Tapper.Tests.Categories;
 
 namespace Mahamudra.Tapper.Tests.Products;
 
-[Table("products")]
-public class Product
+/// <summary>
+/// Product entity - represents a product in the domain
+/// </summary>
+public sealed class Product
 {
-    [Column("product_id")]
-    [Required]
-    public int Id { get; set; }
+    private const int MaxNameLength = 255;
+    private const int MinNameLength = 1;
 
-    [Column("product_name")]
-    [Required(AllowEmptyStrings = false)]
-    public string? Name { get; set; }
+    // Private constructor for EF Core
+    private Product() { }
 
-    [Column("brand_id")]
-    [Required]
-    public int BrandId { get; set; }
+    // Factory method for creating new products
+    public static Product Create(
+        string name,
+        int brandId,
+        int categoryId,
+        short modelYear,
+        decimal listPrice)
+    {
+        ValidateName(name);
+        ValidateBrandId(brandId);
+        ValidateCategoryId(categoryId);
+        ValidateModelYear(modelYear);
+        ValidateListPrice(listPrice);
 
-    [Column("category_id")]
-    [Required]
-    public int CategoryId { get; set; }
+        return new Product
+        {
+            Name = name.Trim(),
+            BrandId = brandId,
+            CategoryId = categoryId,
+            ModelYear = modelYear,
+            ListPrice = listPrice
+        };
+    }
 
-    [Column("model_year")]
-    [Required]
-    public Int16 ModelYear { get; set; }
+    // Factory method for reconstituting from database
+    internal static Product Reconstitute(
+        int id,
+        string name,
+        int brandId,
+        int categoryId,
+        short modelYear,
+        decimal listPrice,
+        Category? category = null)
+    {
+        return new Product
+        {
+            Id = id,
+            Name = name,
+            BrandId = brandId,
+            CategoryId = categoryId,
+            ModelYear = modelYear,
+            ListPrice = listPrice,
+            Category = category
+        };
+    }
 
-    [Column("list_price")]
-    [Required]
-    public decimal ListPrice { get; set; } 
-    public Category? Category { get; set; }
+    public int Id { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public int BrandId { get; private set; }
+    public int CategoryId { get; private set; }
+    public short ModelYear { get; private set; }
+    public decimal ListPrice { get; private set; }
+    public Category? Category { get; private set; }
+
+    public void UpdateName(string newName)
+    {
+        ValidateName(newName);
+        Name = newName.Trim();
+    }
+
+    public void UpdatePrice(decimal newPrice)
+    {
+        ValidateListPrice(newPrice);
+        ListPrice = newPrice;
+    }
+
+    public void UpdateModelYear(short newModelYear)
+    {
+        ValidateModelYear(newModelYear);
+        ModelYear = newModelYear;
+    }
+
+    public void AssignCategory(int categoryId)
+    {
+        ValidateCategoryId(categoryId);
+        CategoryId = categoryId;
+    }
+
+    public void AssignBrand(int brandId)
+    {
+        ValidateBrandId(brandId);
+        BrandId = brandId;
+    }
+
+    private static void ValidateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Product name cannot be empty or whitespace.", nameof(name));
+
+        if (name.Trim().Length < MinNameLength)
+            throw new ArgumentException($"Product name must be at least {MinNameLength} character.", nameof(name));
+
+        if (name.Length > MaxNameLength)
+            throw new ArgumentException($"Product name cannot exceed {MaxNameLength} characters.", nameof(name));
+    }
+
+    private static void ValidateBrandId(int brandId)
+    {
+        if (brandId <= 0)
+            throw new ArgumentException("Brand ID must be greater than zero.", nameof(brandId));
+    }
+
+    private static void ValidateCategoryId(int categoryId)
+    {
+        if (categoryId <= 0)
+            throw new ArgumentException("Category ID must be greater than zero.", nameof(categoryId));
+    }
+
+    private static void ValidateModelYear(short modelYear)
+    {
+        if (modelYear < 1900 || modelYear > 9999)
+            throw new ArgumentException("Model year must be between 1900 and 9999.", nameof(modelYear));
+    }
+
+    private static void ValidateListPrice(decimal listPrice)
+    {
+        if (listPrice < 0)
+            throw new ArgumentException("List price cannot be negative.", nameof(listPrice));
+    }
 } 

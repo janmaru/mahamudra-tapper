@@ -1,10 +1,11 @@
-﻿using Mahamudra.Tapper.Tests.MSSQL;
-using Mahamudra.Tapper.Tests.Products.Commands;
-using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
+﻿using Mahamudra.Tapper.Tests.Brands;
+using Mahamudra.Tapper.Tests.Brands.Commands;
+using Mahamudra.Tapper.Tests.Brands.Commands.Persistence;
+using Mahamudra.Tapper.Tests.MSSQL;
 using Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace Mahamudra.Tapper.Tests.Products.CommandHandlers;
+namespace Mahamudra.Tapper.Tests.Brands.CommandHandlers;
 
 public class BrandCreateCommandHandler : IRequestHandler<BrandCreateCommand, Brand>
 {
@@ -21,20 +22,17 @@ public class BrandCreateCommandHandler : IRequestHandler<BrandCreateCommand, Bra
 
     public async ValueTask<Brand> Handle(BrandCreateCommand command, CancellationToken ct)
     {
-        //validation
-        if (string.IsNullOrEmpty(command.Name) || command.Name.Length > 255)
-            throw new ArgumentException("Name should bla bla...");
+        // Create brand using factory method (validation happens inside)
+        var brand = Brand.Create(command.Name!);
 
         using var context = await _factory.Create(ct: ct);
         var brandId = await context.Execute(new BrandCreateCommandPersistence(
            new BrandCreateCommand(command.AuthenticationInfo)
            {
-               Name = command.Name
+               Name = brand.Name
            }));
-        return new Brand()
-        {
-            Name = command.Name,
-            Id = brandId.Value
-        };
+
+        // Reconstitute with database-generated ID
+        return Brand.Reconstitute(brandId.Value, brand.Name);
     }
 }

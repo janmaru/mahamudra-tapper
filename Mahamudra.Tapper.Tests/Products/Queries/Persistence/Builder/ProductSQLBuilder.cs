@@ -1,34 +1,37 @@
 ﻿using Dapper;
+using Mahamudra.Tapper.Tests.Categories.Queries.Persistence;
 using Mahamudra.Tapper.Tests.Common;
 
 namespace Mahamudra.Tapper.Tests.Products.Queries.Persistence.Builder;
 
+/// <summary>
+/// SQL Builder for Product queries - uses ProductDto for database mapping
+/// </summary>
 public class ProductSQLBuilder
 {
     private static string WhereById()
     {
-        Product? obj;
-        var fieldId = nameof(@obj.Id).GetColumn<Product>();
+        ProductDto? obj = null;
+        var fieldId = nameof(@obj.Id).GetColumn<ProductDto>();
         return $"{fieldId} = @{nameof(@obj.Id)}";
     }
 
     private static SqlBuilder CreateSelect()
     {
-        Product? @obj = null;
+        ProductDto? obj = null;
         var builder = new SqlBuilder();
-        builder.Select(nameof(@obj.Id).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.Name).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.BrandId).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.CategoryId).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.ModelYear).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.ListPrice).GetAsColumn<Product>());
+        builder.Select(nameof(@obj.Id).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.Name).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.BrandId).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.CategoryId).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.ModelYear).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.ListPrice).GetAsColumn<ProductDto>());
         return builder;
     }
 
     public static string SelectAllById()
     {
-        var tableName = nameof(Product);
-        tableName = tableName.GetTable<Product>();
+        var tableName = "products"; // Explicit table name
         var builder = CreateSelect();
         var where = WhereById();
         builder.Where(where);
@@ -38,25 +41,28 @@ public class ProductSQLBuilder
 
     private static SqlBuilder CreateSelectWithCategory()
     {
-        Product? @obj = null;
+        ProductDto? obj = null;
         var builder = new SqlBuilder();
-        builder.Select(nameof(@obj.Id).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.Name).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.BrandId).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.ModelYear).GetAsColumn<Product>());
-        builder.Select(nameof(@obj.ListPrice).GetAsColumn<Product>()); 
-        builder.Select($"p.{nameof(@obj.CategoryId).GetAsColumn<Product>()}");
-        builder.Select(nameof(Category.Name).GetAsColumn<Category>());
+        builder.Select(nameof(@obj.Id).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.Name).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.BrandId).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.ModelYear).GetAsColumn<ProductDto>());
+        builder.Select(nameof(@obj.ListPrice).GetAsColumn<ProductDto>());
+        builder.Select($"p.{nameof(@obj.CategoryId).GetAsColumn<ProductDto>()}");
+
+        CategoryDto? categoryObj = null;
+        builder.Select(nameof(@categoryObj.Name).GetAsColumn<CategoryDto>());
         return builder;
     }
+
     public static string SelectWithCategoryAllById()
     {
-        var tableName = nameof(Product);
-        tableName = $"/*schema*/ {tableName.GetTable<Product>()} p";
-        var innerTableName = nameof(Category);
-        innerTableName = $"/*schema*/ {innerTableName.GetTable<Category>()}";  
-        var builder = CreateSelectWithCategory();  
-        var id = $"{nameof(Category.Id).GetColumn<Category>()}";
+        var tableName = "/*schema*/ products p"; // Explicit table name
+        var innerTableName = "/*schema*/ categories"; // Explicit table name
+
+        var builder = CreateSelectWithCategory();
+        CategoryDto? categoryObj = null;
+        var id = $"{nameof(@categoryObj.Id).GetColumn<CategoryDto>()}";
         builder.InnerJoin($"{innerTableName} c on p.{id} = c.{id}");
         var where = WhereById();
         builder.Where(where);

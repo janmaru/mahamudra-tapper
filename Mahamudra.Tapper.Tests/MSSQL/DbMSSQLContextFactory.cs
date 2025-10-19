@@ -3,7 +3,10 @@ using Microsoft.Data.SqlClient;
 
 namespace Mahamudra.Tapper.Tests.MSSQL;
 
-public class DbMSSQLContextFactor : IDbContextFactory, IProductionDbContextFactory, ISalesDbContextFactory
+public class DbMSSQLContextFactor : 
+    IDbContextFactory, 
+    IProductionDbContextFactory, 
+    ISalesDbContextFactory
 {
     private readonly string _schema;
     private readonly string _connectionString;

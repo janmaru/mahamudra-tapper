@@ -1,4 +1,7 @@
-﻿namespace Mahamudra.Tapper.Tests.Products.Dtos;
+﻿using Mahamudra.Tapper.Tests.Brands;
+using Mahamudra.Tapper.Tests.Categories;
+
+namespace Mahamudra.Tapper.Tests.Products.Dtos;
 
 public class BrandCategoryDto
 {

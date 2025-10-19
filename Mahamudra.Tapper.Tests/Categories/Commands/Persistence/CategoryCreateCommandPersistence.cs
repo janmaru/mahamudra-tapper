@@ -1,22 +1,23 @@
 ﻿using Mahamudra.Tapper.Interfaces;
+using Mahamudra.Tapper.Tests.Categories.Commands;
 using Mahamudra.Tapper.Tests.Common;
 using System.Data;
 
-namespace Mahamudra.Tapper.Tests.Products.Commands.Persistence
+namespace Mahamudra.Tapper.Tests.Categories.Commands.Persistence
 {
 
-    public sealed class BrandCreateCommandPersistence : DapperBase, ICommand<int?>
+    public sealed class CategoryCreateCommandPersistence : DapperBase, ICommand<int?>
     {
-        public BrandCreateCommandPersistence(BrandCreateCommand command)
+        public CategoryCreateCommandPersistence(CategoryCreateCommand command)
         {
             this._command = command;
         }
 
-        private readonly BrandCreateCommand _command;
+        private readonly CategoryCreateCommand _command;
 
         private static readonly string _sqlInsert = @"
-INSERT INTO /*schema*/ brands 
-            (brand_name)
+INSERT INTO /*schema*/ categories 
+            (category_name)
 VALUES      (@name); 
 Select SCOPE_IDENTITY()";
 

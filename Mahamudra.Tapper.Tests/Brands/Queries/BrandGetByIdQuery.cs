@@ -1,6 +1,6 @@
 ﻿using Mahamudra.Tapper.Tests.Common;
 
-namespace Mahamudra.Tapper.Tests.Products.Queries;
+namespace Mahamudra.Tapper.Tests.Brands.Queries;
 
 public class BrandGetByIdQuery 
 {

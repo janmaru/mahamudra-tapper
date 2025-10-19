@@ -1,5 +1,7 @@
 ﻿using Mahamudra.Tapper.Interfaces;
+using Mahamudra.Tapper.Tests.Categories;
 using Mahamudra.Tapper.Tests.Common;
+using Mahamudra.Tapper.Tests.Products.Queries;
 using Mahamudra.Tapper.Tests.Products.Queries.Persistence.Builder;
 using System.Data;
 
@@ -32,13 +34,13 @@ WHERE  product_id = @id;
         var sql = _sqlSelectWithBuilder.Add(schema);
         // or choose
         // _sqlSelect.Add(schema)
-        return (await ((IPersistence)this).SelectAsync<Product, Category>(
+        var dto = (await ((IPersistence)this).SelectAsync<ProductDto, Category>(
             connection!,
             sql,
-            (product, category) =>
+            (productDto, category) =>
             {
-                product.Category = category;
-                return product;
+                productDto.Category = category;
+                return productDto;
             },
             splitOn: $"CategoryId",
             new
@@ -46,5 +48,7 @@ WHERE  product_id = @id;
                 id = _query.Id
             }, transaction))
         .FirstOrDefault();
+
+        return dto?.ToDomain();
     }
 }

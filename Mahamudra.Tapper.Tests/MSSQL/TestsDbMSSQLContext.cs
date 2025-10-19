@@ -1,10 +1,22 @@
 using Mahamudra.Tapper.Interfaces;
 using Mahamudra.Tapper.Tests.Common;
 using Mahamudra.Tapper.Tests.MySQL;
+using Mahamudra.Tapper.Tests.Brands.Commands;
+using Mahamudra.Tapper.Tests.Categories.Commands;
 using Mahamudra.Tapper.Tests.Products.Commands;
+using Mahamudra.Tapper.Tests.Stores.Commands;
+using Mahamudra.Tapper.Tests.Brands.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Categories.Commands.Persistence;
 using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Stores.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Brands.Queries;
+using Mahamudra.Tapper.Tests.Categories.Queries;
 using Mahamudra.Tapper.Tests.Products.Queries;
+using Mahamudra.Tapper.Tests.Stores.Queries;
+using Mahamudra.Tapper.Tests.Brands.Queries.Persistence;
+using Mahamudra.Tapper.Tests.Categories.Queries.Persistence;
 using Mahamudra.Tapper.Tests.Products.Queries.Persistence;
+using Mahamudra.Tapper.Tests.Stores.Queries.Persistence;
 using Mediator;
 using Microsoft.Extensions.Logging;
 
@@ -15,7 +27,6 @@ public class TestsDbMSSQLContext
     private IDbContextFactory _factory;
     private ILogger<TestsDbMSSQLContext> _logger;
     private IMediator _handler;
-
 
     private static IAuthenticationInfo BasicAuthenticationInfo => new AuthenticationInfo()
     {
@@ -522,7 +533,7 @@ public class TestsDbMSSQLContext
         var brandName = Random.Shared.NextSingle().ToString();
 
         using var context = await _factory.Create();
-        
+
         var firstBrandId = await context.Execute(new BrandCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
@@ -537,5 +548,71 @@ public class TestsDbMSSQLContext
             }));
         Assert.That(secondBrandId, Is.GreaterThan(0));
         Assert.That(secondBrandId, Is.Not.EqualTo(firstBrandId));
+    }
+
+    [Test]
+    public async Task StoreCreateCommand_ShouldInsertStore_WithGuidId()
+    {
+        var authInfo = BasicAuthenticationInfo;
+        var expectedStoreName = $"Store_{Random.Shared.NextSingle()}";
+        var expectedPhone = "(555) 123-4567";
+        var expectedEmail = "store@example.com";
+        var expectedStreet = "123 Main St";
+        var expectedCity = "New York";
+        var expectedState = "NY";
+        var expectedZipCode = "10001";
+
+        var command = new StoreCreateCommand(authInfo)
+        {
+            Name = expectedStoreName,
+            Phone = expectedPhone,
+            Email = expectedEmail,
+            Street = expectedStreet,
+            City = expectedCity,
+            State = expectedState,
+            ZipCode = expectedZipCode
+        };
+
+        using var context = await _factory.Create();
+        var storeId = await context.Execute(new StoreCreateCommandPersistence(command));
+
+        Assert.That(storeId, Is.Not.EqualTo(Guid.Empty));
+        Assert.That(storeId, Is.EqualTo(command.Id));
+    }
+
+    [Test]
+    public async Task StoreCreateCommand_ShouldInsertStore_WithGuidIdAndQuery()
+    {
+        var authInfo = BasicAuthenticationInfo;
+        var expectedStoreName = $"Store_{Random.Shared.NextSingle()}";
+        var expectedPhone = "(555) 123-4567";
+        var expectedEmail = "store@example.com";
+
+        var command = new StoreCreateCommand(authInfo)
+        {
+            Name = expectedStoreName,
+            Phone = expectedPhone,
+            Email = expectedEmail,
+            Street = "456 Oak Ave",
+            City = "Los Angeles",
+            State = "CA",
+            ZipCode = "90001"
+        };
+
+        using var context = await _factory.Create(new MSSQLTransaction());
+        var storeId = await context.Execute(new StoreCreateCommandPersistence(command));
+        Assert.That(storeId, Is.Not.EqualTo(Guid.Empty));
+        context.Commit();
+
+        var store = await context.Query(new StoreGetByIdQueryPersistence(new StoreGetByIdQuery(authInfo)
+        {
+            Id = storeId.Value
+        }));
+
+        Assert.That(store, Is.Not.Null);
+        Assert.That(store!.Name, Is.EqualTo(expectedStoreName));
+        Assert.That(store.Phone, Is.EqualTo(expectedPhone));
+        Assert.That(store.Email, Is.EqualTo(expectedEmail));
+        Assert.That(store.Id, Is.EqualTo(storeId.Value));
     }
 }

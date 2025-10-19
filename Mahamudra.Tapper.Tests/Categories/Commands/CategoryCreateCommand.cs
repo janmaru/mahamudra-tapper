@@ -1,6 +1,6 @@
 ﻿using Mahamudra.Tapper.Tests.Common;
 
-namespace Mahamudra.Tapper.Tests.Products.Commands;
+namespace Mahamudra.Tapper.Tests.Categories.Commands;
 public sealed class CategoryCreateCommand 
 {
     public CategoryCreateCommand(IAuthenticationInfo authenticationInfo)

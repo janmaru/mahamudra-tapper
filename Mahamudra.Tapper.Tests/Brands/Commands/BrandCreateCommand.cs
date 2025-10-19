@@ -1,7 +1,8 @@
-﻿using Mahamudra.Tapper.Tests.Common;
+﻿using Mahamudra.Tapper.Tests.Brands;
+using Mahamudra.Tapper.Tests.Common;
 using Mediator;
 
-namespace Mahamudra.Tapper.Tests.Products.Commands;
+namespace Mahamudra.Tapper.Tests.Brands.Commands;
 public sealed class BrandCreateCommand : IRequest<Brand>
 {
     public BrandCreateCommand(IAuthenticationInfo authenticationInfo)

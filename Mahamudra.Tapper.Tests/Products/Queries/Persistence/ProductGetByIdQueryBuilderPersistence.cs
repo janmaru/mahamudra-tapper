@@ -1,5 +1,6 @@
 ﻿using Mahamudra.Tapper.Interfaces;
 using Mahamudra.Tapper.Tests.Common;
+using Mahamudra.Tapper.Tests.Products.Queries;
 using Mahamudra.Tapper.Tests.Products.Queries.Persistence.Builder;
 using System.Data;
 
@@ -17,10 +18,12 @@ public class ProductGetByIdQueryBuilderPersistence : DapperBase, IQuery<Product?
 
     public async Task<Product?> Select(IDbConnection connection, IDbTransaction transaction, CancellationToken ct = default, string? schema = null)
     {
-        return (await ((IPersistence)this).SelectAsync<Product>(connection!, _sqlSelect.Add(schema), new
+        var dto = (await ((IPersistence)this).SelectAsync<ProductDto>(connection!, _sqlSelect.Add(schema), new
         {
             id = _query.Id
         }, transaction))
         .FirstOrDefault();
+
+        return dto?.ToDomain();
     }
 }

@@ -28,10 +28,7 @@ namespace Mahamudra.Tapper
 
         public Task<T> Query<T>(IQuery<T> query, CancellationToken ct = default)
             => query.Select(_connection, _transaction, ct, _schema);
-
-        public Task<int> Execute(ICommand command, CancellationToken ct = default) 
-            => command.Execute(_connection, _transaction, ct, _schema); 
-
+ 
         public Task<T> Execute<T>(ICommand<T> command, CancellationToken ct = default) 
             => command.Execute(_connection, _transaction, ct, _schema); 
 

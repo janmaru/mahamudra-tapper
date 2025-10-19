@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet test)"
+      "Bash(dotnet test)",
+      "Bash(dir /S /B Categories)",
+      "Bash(dir /S /B Stores)",
+      "Bash(dir /S /B Products)",
+      "Bash(dotnet build Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj)",
+      "Bash(dotnet test Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj --verbosity normal)"
     ],
     "deny": []
   }
