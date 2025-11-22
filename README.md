@@ -1,5 +1,20 @@
 # Tapper
 ## _The last library that wraps Dapper, ever._
+
+[![NuGet](https://img.shields.io/nuget/v/Mahamudra.Tapper.svg)](https://www.nuget.org/packages/Mahamudra.Tapper)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Mahamudra.Tapper.svg)](https://www.nuget.org/packages/Mahamudra.Tapper)
+
+## Installation
+
+```bash
+dotnet add package Mahamudra.Tapper
+```
+
+Or via Package Manager:
+```powershell
+Install-Package Mahamudra.Tapper
+```
+
 [Dapper](https://github.com/DapperLib/Dapper) is a simple object mapper for .Net.
 What this library is not going to address:
 - Is there any need for any abstraction, in the larger sense?
@@ -519,3 +534,28 @@ This document covers:
 - Query caching strategies
 - Connection pooling configuration
 - Identified improvements and their implementation status
+
+## Releases
+
+This project uses [GitVersion](https://gitversion.net/) for semantic versioning. Releases are automated via GitHub Actions.
+
+### Creating a Release
+
+To publish a new version to NuGet:
+
+1. Create and push a git tag:
+```bash
+git tag v1.0.2
+git push origin v1.0.2
+```
+
+2. The GitHub Action will automatically:
+   - Build and test the project
+   - Pack the NuGet package
+   - Publish to [NuGet.org](https://www.nuget.org/packages/Mahamudra.Tapper)
+
+### Version Scheme
+
+- **Patch** (1.0.x): Bug fixes and minor improvements
+- **Minor** (1.x.0): New features, backward compatible
+- **Major** (x.0.0): Breaking changes
