@@ -1,8 +1,6 @@
 ﻿using Mahamudra.Tapper.Interfaces;
-using Mahamudra.Tapper.Tests.Brands;
 using Mahamudra.Tapper.Tests.Brands.Queries.Persistence;
 using Mahamudra.Tapper.Tests.Brands.Queries.Persistence.Builder;
-using Mahamudra.Tapper.Tests.Categories;
 using Mahamudra.Tapper.Tests.Categories.Queries.Persistence;
 using Mahamudra.Tapper.Tests.Categories.Queries.Persistence.Builder;
 using Mahamudra.Tapper.Tests.Common;

@@ -37,7 +37,6 @@ public sealed class Store
 
         return new Store
         {
-            Id = Guid.NewGuid(),
             Name = name.Trim(),
             Phone = phone?.Trim(),
             Email = email?.Trim(),
@@ -50,7 +49,7 @@ public sealed class Store
 
     // Factory method for reconstituting from database
     internal static Store Reconstitute(
-        Guid id,
+        int id,
         string name,
         string? phone = null,
         string? email = null,
@@ -72,7 +71,7 @@ public sealed class Store
         };
     }
 
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string? Phone { get; private set; }
     public string? Email { get; private set; }

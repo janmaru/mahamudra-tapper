@@ -2,12 +2,7 @@ using Mahamudra.Tapper.Interfaces;
 using Mahamudra.Tapper.Tests.Brands.Commands;
 using Mahamudra.Tapper.Tests.Common;
 using Mahamudra.Tapper.Tests.MSSQL;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Mahamudra.Tapper.Tests
 {

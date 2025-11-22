@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Dapper;
+using Mahamudra.Tapper.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Threading.Tasks;
-using Dapper;
-using Mahamudra.Tapper.Interfaces;
 using static Dapper.SqlMapper;
 
 namespace Mahamudra.Tapper

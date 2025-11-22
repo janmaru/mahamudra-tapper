@@ -1,12 +1,12 @@
 /*
 --------------------------------------------------------------------
-© 2017 sqlservertutorial.net All Rights Reserved
+  2017 sqlservertutorial.net All Rights Reserved
 --------------------------------------------------------------------
 Name   : BikeStores
 Link   : http://www.sqlservertutorial.net/load-sample-database/
 Version: 1.0
 --------------------------------------------------------------------
-*/
+*/ 
 
 -- create schemas
 
@@ -122,11 +122,20 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [production].[uspGetBrandById]  
+CREATE PROCEDURE [production].[uspGetBrandById]
     @id int
-AS    
-    SET NOCOUNT ON;  
-    SELECT brand_id as id, brand_name as name 
+AS
+    SET NOCOUNT ON;
+    SELECT brand_id as id, brand_name as name
     FROM production.brands
-    WHERE brand_id = @id; 
+    WHERE brand_id = @id;
+GO
+
+CREATE PROCEDURE [sales].[uspGetStoreById]
+    @id int
+AS
+    SET NOCOUNT ON;
+    SELECT store_id as id, store_name as name, phone, email, street, city, state, zip_code as zipCode
+    FROM sales.stores
+    WHERE store_id = @id;
 GO

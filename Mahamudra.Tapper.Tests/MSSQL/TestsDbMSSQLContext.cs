@@ -1,21 +1,18 @@
 using Mahamudra.Tapper.Interfaces;
-using Mahamudra.Tapper.Tests.Common;
-using Mahamudra.Tapper.Tests.MySQL;
 using Mahamudra.Tapper.Tests.Brands.Commands;
-using Mahamudra.Tapper.Tests.Categories.Commands;
-using Mahamudra.Tapper.Tests.Products.Commands;
-using Mahamudra.Tapper.Tests.Stores.Commands;
 using Mahamudra.Tapper.Tests.Brands.Commands.Persistence;
-using Mahamudra.Tapper.Tests.Categories.Commands.Persistence;
-using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
-using Mahamudra.Tapper.Tests.Stores.Commands.Persistence;
 using Mahamudra.Tapper.Tests.Brands.Queries;
-using Mahamudra.Tapper.Tests.Categories.Queries;
-using Mahamudra.Tapper.Tests.Products.Queries;
-using Mahamudra.Tapper.Tests.Stores.Queries;
 using Mahamudra.Tapper.Tests.Brands.Queries.Persistence;
-using Mahamudra.Tapper.Tests.Categories.Queries.Persistence;
+using Mahamudra.Tapper.Tests.Categories.Commands;
+using Mahamudra.Tapper.Tests.Categories.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Common;
+using Mahamudra.Tapper.Tests.Products.Commands;
+using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Products.Queries;
 using Mahamudra.Tapper.Tests.Products.Queries.Persistence;
+using Mahamudra.Tapper.Tests.Stores.Commands;
+using Mahamudra.Tapper.Tests.Stores.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Stores.Queries;
 using Mahamudra.Tapper.Tests.Stores.Queries.Persistence;
 using Mediator;
 using Microsoft.Extensions.Logging;
@@ -573,11 +570,12 @@ public class TestsDbMSSQLContext
             ZipCode = expectedZipCode
         };
 
-        using var context = await _factory.Create();
+        var salesFactory = ServicesProvider.GetRequiredService<ISalesDbContextFactory>();
+        using var context = await salesFactory.Create();
         var storeId = await context.Execute(new StoreCreateCommandPersistence(command));
 
-        Assert.That(storeId, Is.Not.EqualTo(Guid.Empty));
-        Assert.That(storeId, Is.EqualTo(command.Id));
+        Assert.That(storeId, Is.Not.Null);
+        Assert.That(storeId, Is.GreaterThan(0));
     }
 
     [Test]
@@ -599,14 +597,16 @@ public class TestsDbMSSQLContext
             ZipCode = "90001"
         };
 
-        using var context = await _factory.Create(new MSSQLTransaction());
+        var salesFactory = ServicesProvider.GetRequiredService<ISalesDbContextFactory>();
+        using var context = await salesFactory.Create(new MSSQLTransaction());
         var storeId = await context.Execute(new StoreCreateCommandPersistence(command));
-        Assert.That(storeId, Is.Not.EqualTo(Guid.Empty));
+        Assert.That(storeId, Is.Not.Null);
+        Assert.That(storeId, Is.GreaterThan(0));
         context.Commit();
 
         var store = await context.Query(new StoreGetByIdQueryPersistence(new StoreGetByIdQuery(authInfo)
         {
-            Id = storeId.Value
+            Id = storeId!.Value
         }));
 
         Assert.That(store, Is.Not.Null);

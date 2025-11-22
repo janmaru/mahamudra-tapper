@@ -11,7 +11,7 @@ internal sealed class StoreDto
 {
     [Column("store_id")]
     [Required]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Column("store_name")]
     [Required(AllowEmptyStrings = false)]

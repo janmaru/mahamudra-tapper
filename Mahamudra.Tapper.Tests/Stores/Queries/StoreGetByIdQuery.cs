@@ -10,5 +10,5 @@ public class StoreGetByIdQuery
     }
 
     public IAuthenticationInfo AuthenticationInfo { get; internal set; }
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 }

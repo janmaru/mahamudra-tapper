@@ -45,7 +45,7 @@
     restart: always
     volumes:
       - mysqldata:/var/lib/mysql
-      - "./data/mysql_setup.sql:/docker-entrypoint-initdb.d/mysql_setup.sql"
+      - "./Data/mysql_setup.sql:/docker-entrypoint-initdb.d/mysql_setup.sql"
     environment:
       MYSQL_USER: 'admin'
       MYSQL_PASSWORD: 'PaSSw0rd123!'

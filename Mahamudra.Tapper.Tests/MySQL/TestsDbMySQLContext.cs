@@ -1,31 +1,28 @@
 using Mahamudra.Tapper.Interfaces;
-using Mahamudra.Tapper.Tests.Common;
 using Mahamudra.Tapper.Tests.Brands.Commands;
-using Mahamudra.Tapper.Tests.Categories.Commands;
-using Mahamudra.Tapper.Tests.Products.Commands;
-using Mahamudra.Tapper.Tests.Stores.Commands;
 using Mahamudra.Tapper.Tests.Brands.Commands.Persistence;
-using Mahamudra.Tapper.Tests.Categories.Commands.Persistence;
-using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
-using Mahamudra.Tapper.Tests.Stores.Commands.Persistence;
 using Mahamudra.Tapper.Tests.Brands.Queries;
-using Mahamudra.Tapper.Tests.Categories.Queries;
-using Mahamudra.Tapper.Tests.Products.Queries;
-using Mahamudra.Tapper.Tests.Stores.Queries;
 using Mahamudra.Tapper.Tests.Brands.Queries.Persistence;
-using Mahamudra.Tapper.Tests.Categories.Queries.Persistence;
+using Mahamudra.Tapper.Tests.Categories.Commands;
+using Mahamudra.Tapper.Tests.Categories.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Common;
+using Mahamudra.Tapper.Tests.Products.Commands;
+using Mahamudra.Tapper.Tests.Products.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Products.Queries;
 using Mahamudra.Tapper.Tests.Products.Queries.Persistence;
+using Mahamudra.Tapper.Tests.Stores.Commands;
+using Mahamudra.Tapper.Tests.Stores.Commands.Persistence;
+using Mahamudra.Tapper.Tests.Stores.Queries;
 using Mahamudra.Tapper.Tests.Stores.Queries.Persistence;
-using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace Mahamudra.Tapper.Tests.MySQL;
 
 public class TestsDbMySQLContext
 {
-    private IDbContextFactory _factory;
-    private ILogger<TestsDbMySQLContext> _logger;
-    private IMediator _handler;
+    private IDbContextFactory _productionFactory;
+    private IDbContextFactory _salesFactory;
+    private ILogger<TestsDbMySQLContext> _logger; 
 
 
     private static IAuthenticationInfo BasicAuthenticationInfo => new AuthenticationInfo()
@@ -36,9 +33,9 @@ public class TestsDbMySQLContext
     [SetUp]
     public void Setup()
     {
-        _factory = ServicesProvider.GetRequiredService<IProductionMySQLDbContextFactory>();
-        _logger = ServicesProvider.GetRequiredService<ILogger<TestsDbMySQLContext>>();
-        _handler = ServicesProvider.GetRequiredService<IMediator>();
+        _productionFactory = ServicesProvider.GetRequiredService<IProductionMySQLDbContextFactory>();
+        _salesFactory = ServicesProvider.GetRequiredService<ISalesMySQLDbContextFactory>();
+        _logger = ServicesProvider.GetRequiredService<ILogger<TestsDbMySQLContext>>(); 
     }
   
     [Test]
@@ -46,7 +43,7 @@ public class TestsDbMySQLContext
     {
         var authInfo = BasicAuthenticationInfo; 
         var expectedBrandName = Random.Shared.NextSingle().ToString();
-        using var context = await _factory.Create(new MySQLTransaction()); 
+        using var context = await _productionFactory.Create(new MySQLTransaction()); 
         var brandId = await context.Execute(new BrandMySqlCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
@@ -75,7 +72,7 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create();
+        using var context = await _productionFactory.Create();
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -114,7 +111,7 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create();
+        using var context = await _productionFactory.Create();
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -162,7 +159,7 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -210,7 +207,7 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -258,7 +255,7 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -304,7 +301,7 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -345,7 +342,7 @@ public class TestsDbMySQLContext
         var authInfo = BasicAuthenticationInfo;
         var expectedName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var brandId = await context.Execute(new BrandMySqlCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
@@ -387,7 +384,7 @@ public class TestsDbMySQLContext
         int? categoryId;
         int? brandId;
         
-        using (var setupContext = await _factory.Create())
+        using (var setupContext = await _productionFactory.Create())
         {
             categoryId = await setupContext.Execute(new CategoryMySqlCreateCommandPersistence(
                 new CategoryCreateCommand(authInfo)
@@ -405,7 +402,7 @@ public class TestsDbMySQLContext
         }
 
         // Now create product with transaction
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var command = new ProductCreateCommand(authInfo)
         {
             Name = expectedProductName,
@@ -434,7 +431,7 @@ public class TestsDbMySQLContext
         var authInfo = BasicAuthenticationInfo;
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create();
+        using var context = await _productionFactory.Create();
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -450,7 +447,7 @@ public class TestsDbMySQLContext
         var authInfo = BasicAuthenticationInfo;
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var brandId = await context.Execute(new BrandMySqlCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
@@ -473,14 +470,14 @@ public class TestsDbMySQLContext
     [Test]
     public async Task DatabaseConnection_ShouldConnect_WithoutErrors()
     {
-        using var context = await _factory.Create();
+        using var context = await _productionFactory.Create();
         Assert.That(context, Is.Not.Null);
     }
 
     [Test]
     public async Task DatabaseConnection_ShouldConnect_WithTransaction()
     {
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         Assert.That(context, Is.Not.Null);
         context.Commit();
     }
@@ -491,14 +488,13 @@ public class TestsDbMySQLContext
         var authInfo = BasicAuthenticationInfo;
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
         var brandId = await context.Execute(new BrandMySqlCreateCommandPersistence(
             new BrandCreateCommand(authInfo)
             {
                 Name = expectedBrandName
             }));
         
-        Console.WriteLine($"Brand ID returned: {brandId}");
         Assert.That(brandId, Is.Not.Null);
         Assert.That(brandId, Is.GreaterThan(0));
         
@@ -525,14 +521,13 @@ public class TestsDbMySQLContext
         var expectedCategoryName = Random.Shared.NextSingle().ToString();
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
-        using var context = await _factory.Create(new MySQLTransaction());
+        using var context = await _productionFactory.Create(new MySQLTransaction());
 
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
                 Name = expectedCategoryName
             }));
-        Console.WriteLine($"Category ID: {categoryId}");
         Assert.That(categoryId, Is.GreaterThan(0));
 
         var brandId = await context.Execute(new BrandMySqlCreateCommandPersistence(
@@ -540,10 +535,7 @@ public class TestsDbMySQLContext
             {
                 Name = expectedBrandName
             }));
-        Console.WriteLine($"Brand ID: {brandId}");
         Assert.That(brandId, Is.GreaterThan(0));
-
-        Console.WriteLine($"About to create product with BrandId: {brandId.Value}, CategoryId: {categoryId.Value}");
 
         var command = new ProductCreateCommand(authInfo)
         {
@@ -555,7 +547,7 @@ public class TestsDbMySQLContext
         };
 
         var productId = await context.Execute(new ProductMySqlCreateCommandPersistence(command));
-        Console.WriteLine($"Product ID: {productId}");
+        Assert.That(productId, Is.GreaterThan(0));
 
         context.Commit();
     }
@@ -574,7 +566,7 @@ public class TestsDbMySQLContext
         // Test 1: Buffered mode in transaction
         try
         {
-            using var context1 = await _factory.Create(new MySQLTransaction());
+            using var context1 = await _productionFactory.Create(new MySQLTransaction());
 
             var categoryId1 = await context1.Execute(new CategoryMySqlCreateCommandPersistence(
                 new CategoryCreateCommand(authInfo) { Name = "Cat_Buffered" }));
@@ -608,7 +600,7 @@ public class TestsDbMySQLContext
         // Test 2: Unbuffered mode in transaction
         try
         {
-            using var context2 = await _factory.Create(new MySQLTransaction());
+            using var context2 = await _productionFactory.Create(new MySQLTransaction());
 
             var categoryId2 = await context2.Execute(new CategoryMySqlCreateCommandPersistence(
                 new CategoryCreateCommand(authInfo) { Name = "Cat_Unbuf" }));
@@ -644,7 +636,7 @@ public class TestsDbMySQLContext
         int? productId3 = null;
         try
         {
-            using (var context3 = await _factory.Create(new MySQLTransaction()))
+            using (var context3 = await _productionFactory.Create(new MySQLTransaction()))
             {
                 var categoryId3 = await context3.Execute(new CategoryMySqlCreateCommandPersistence(
                     new CategoryCreateCommand(authInfo) { Name = "Cat_AfterCommit" }));
@@ -666,7 +658,7 @@ public class TestsDbMySQLContext
             }
 
             // Query after commit in new context
-            using (var queryContext = await _factory.Create())
+            using (var queryContext = await _productionFactory.Create())
             {
                 var product3 = await queryContext.Query(new ProductCategoryGetByIdQueryUnbufferedPersistence(
                     new ProductGetByIdQuery(authInfo) { Id = productId3.Value }));
@@ -682,8 +674,6 @@ public class TestsDbMySQLContext
         }
 
         testResults.AppendLine("╚════════════╩═══════════╩════════════╩═════════════╩═══════════════╩══════════════╝");
-
-        Console.WriteLine(testResults.ToString());
     }
 
     [Test]
@@ -708,12 +698,12 @@ public class TestsDbMySQLContext
             State = expectedState,
             ZipCode = expectedZipCode
         };
-
-        using var context = await _factory.Create();
+ 
+        using var context = await _salesFactory.Create();
         var storeId = await context.Execute(new StoreMySqlCreateCommandPersistence(command));
 
-        Assert.That(storeId, Is.Not.EqualTo(Guid.Empty));
-        Assert.That(storeId, Is.EqualTo(command.Id));
+        Assert.That(storeId, Is.Not.Null);
+        Assert.That(storeId, Is.GreaterThan(0));
     }
 
     [Test]
@@ -734,21 +724,27 @@ public class TestsDbMySQLContext
             State = "IL",
             ZipCode = "60601"
         };
-
-        using var context = await _factory.Create(new MySQLTransaction());
+ 
+        using var context = await _salesFactory.Create(new MySQLTransaction());
         var storeId = await context.Execute(new StoreMySqlCreateCommandPersistence(command));
-        Assert.That(storeId, Is.Not.EqualTo(Guid.Empty));
+
+        Assert.That(storeId, Is.Not.Null);
+        Assert.That(storeId, Is.GreaterThan(0));
+
         context.Commit();
 
         var store = await context.Query(new StoreMySqlGetByIdQueryPersistence(new StoreGetByIdQuery(authInfo)
         {
-            Id = storeId.Value
+            Id = storeId!.Value
         }));
 
         Assert.That(store, Is.Not.Null);
-        Assert.That(store!.Name, Is.EqualTo(expectedStoreName));
-        Assert.That(store.Phone, Is.EqualTo(expectedPhone));
-        Assert.That(store.Email, Is.EqualTo(expectedEmail));
-        Assert.That(store.Id, Is.EqualTo(storeId.Value));
+        Assert.Multiple(() =>
+        {
+            Assert.That(store!.Name, Is.EqualTo(expectedStoreName));
+            Assert.That(store.Phone, Is.EqualTo(expectedPhone));
+            Assert.That(store.Email, Is.EqualTo(expectedEmail));
+            Assert.That(store.Id, Is.EqualTo(storeId.Value));
+        });
     }
 }

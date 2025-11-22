@@ -1,7 +1,6 @@
 ﻿using Mahamudra.Tapper.Interfaces;
 using Mahamudra.Tapper.Tests.Common;
 using System.Data;
-using Mahamudra.Tapper.Tests.Products.Queries;
 
 namespace Mahamudra.Tapper.Tests.Products.Queries.Persistence;
 

@@ -508,3 +508,14 @@ Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;Pooling
 ```
 
 Always dispose `DbContext` (or `IDbConnection`) promptly to return connections to the pool. The `using` statement is recommended.
+
+## Performance Analysis
+
+For a comprehensive analysis of performance considerations, optimization opportunities, and best practices for high-performance scenarios, see the [Performance Analysis Document](PERFORMANCE_ANALYSIS.md).
+
+This document covers:
+- Batch operation patterns
+- Memory management with buffering
+- Query caching strategies
+- Connection pooling configuration
+- Identified improvements and their implementation status

@@ -9,7 +9,8 @@
       "Bash(dotnet test Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj --verbosity normal)",
       "Bash(nul)",
       "Bash(dotnet test:*)",
-      "Bash(Select-String -Pattern \"SQL:|Category ID:|Brand ID:|Product ID:|Querying|No columns\" -Context 0,2)"
+      "Bash(Select-String -Pattern \"SQL:|Category ID:|Brand ID:|Product ID:|Querying|No columns\" -Context 0,2)",
+      "Bash(docker compose:*)"
     ],
     "deny": []
   }
