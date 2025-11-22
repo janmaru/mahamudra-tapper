@@ -100,11 +100,20 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+
       - name: Check if version changed
         id: version-check
         run: |
-          # Get current version from project file
-          CURRENT_VERSION=$(grep '<Version>' Mahamudra.Tapper/Mahamudra.Tapper.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/' | tr -d '[:space:]')
+          # Get current version from GitVersion
+          CURRENT_VERSION="${{ steps.gitversion.outputs.semVer }}"
           echo "Current version: $CURRENT_VERSION"
 
           # Check if this version exists on NuGet

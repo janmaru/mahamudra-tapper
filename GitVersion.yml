@@ -1,0 +1,17 @@
+mode: Mainline
+next-version: 1.0.1
+branches:
+  main:
+    regex: ^main$
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+    source-branches: []
+    is-source-branch-for: []
+  feature:
+    regex: ^features?[/-]
+    mode: ContinuousDelivery
+    tag: alpha
+    increment: Minor
