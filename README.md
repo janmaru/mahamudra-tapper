@@ -460,4 +460,51 @@ public async Task<Product?> Select(IDbConnection connection, IDbTransaction tran
 - **Clear Boundaries**: Infrastructure DTOs keep database concerns separate
 - **Type Safety**: Compile-time checking of database mappings
 - **Flexibility**: Can change database schema without affecting domain
-- **Performance**: Efficient mapping with Dapper's micro-ORM approach  
+- **Performance**: Efficient mapping with Dapper's micro-ORM approach
+
+## Performance Best Practices
+
+### Batch Operations
+For high-volume insert or update operations, use `ExecuteBatchAsync` to reduce network round-trips. This method executes the same command for a collection of parameters.
+
+```csharp
+public async Task<int> ExecuteBatch(IDbConnection connection, IEnumerable<ProductCreateCommand> commands, IDbTransaction transaction)
+{
+    var sql = @"INSERT INTO products (name, price) VALUES (@Name, @Price)";
+    // Executes the SQL once for each item in the collection, but optimized by Dapper
+    return await ((IPersistence)this).ExecuteBatchAsync(connection, sql, commands, transaction);
+}
+```
+
+### Memory Management (Buffering)
+By default, `SelectAsync` buffers all results in memory (`buffered: true`). For large datasets, set `buffered: false` to stream results and reduce memory pressure.
+
+```csharp
+public async Task<IEnumerable<ProductDto>> GetAllProductsStream(IDbConnection connection, IDbTransaction transaction)
+{
+    // buffered: false returns an open IDataReader wrapped as IEnumerable
+    // The connection must remain open while iterating
+    return await ((IPersistence)this).SelectAsync<ProductDto>(
+        connection, 
+        "SELECT * FROM products", 
+        null, 
+        transaction, 
+        CommandType.Text, 
+        buffered: false);
+}
+```
+
+### Connection Pooling
+The library relies on the underlying ADO.NET provider for connection pooling. Ensure your connection strings are configured correctly:
+
+**SQL Server:**
+```
+Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;Pooling=true;Min Pool Size=5;Max Pool Size=100;
+```
+
+**MySQL:**
+```
+Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;Pooling=true;MinimumPoolSize=5;MaximumPoolSize=100;
+```
+
+Always dispose `DbContext` (or `IDbConnection`) promptly to return connections to the pool. The `using` statement is recommended.

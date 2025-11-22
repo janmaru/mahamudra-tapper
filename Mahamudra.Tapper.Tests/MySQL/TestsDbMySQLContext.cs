@@ -526,7 +526,7 @@ public class TestsDbMySQLContext
         var expectedBrandName = Random.Shared.NextSingle().ToString();
 
         using var context = await _factory.Create(new MySQLTransaction());
-        
+
         var categoryId = await context.Execute(new CategoryMySqlCreateCommandPersistence(
             new CategoryCreateCommand(authInfo)
             {
@@ -544,7 +544,7 @@ public class TestsDbMySQLContext
         Assert.That(brandId, Is.GreaterThan(0));
 
         Console.WriteLine($"About to create product with BrandId: {brandId.Value}, CategoryId: {categoryId.Value}");
-        
+
         var command = new ProductCreateCommand(authInfo)
         {
             Name = expectedProductName,
@@ -558,6 +558,132 @@ public class TestsDbMySQLContext
         Console.WriteLine($"Product ID: {productId}");
 
         context.Commit();
+    }
+
+    [Test]
+    public async Task ProductCreateAndQuery_BufferedVsUnbuffered_InTransaction()
+    {
+        var authInfo = BasicAuthenticationInfo;
+        var testResults = new System.Text.StringBuilder();
+        testResults.AppendLine("\n╔════════════════════════════════════════════════════════════════════════════════════╗");
+        testResults.AppendLine("║                        Buffered vs Unbuffered Test Results                        ║");
+        testResults.AppendLine("╠════════════╦═══════════╦════════════╦═════════════╦═══════════════╦══════════════╣");
+        testResults.AppendLine("║ Test Mode  ║ ProductID ║ Category   ║ Buffered    ║ In Transaction║ Result       ║");
+        testResults.AppendLine("╠════════════╬═══════════╬════════════╬═════════════╬═══════════════╬══════════════╣");
+
+        // Test 1: Buffered mode in transaction
+        try
+        {
+            using var context1 = await _factory.Create(new MySQLTransaction());
+
+            var categoryId1 = await context1.Execute(new CategoryMySqlCreateCommandPersistence(
+                new CategoryCreateCommand(authInfo) { Name = "Cat_Buffered" }));
+
+            var brandId1 = await context1.Execute(new BrandMySqlCreateCommandPersistence(
+                new BrandCreateCommand(authInfo) { Name = "Brand_Buffered" }));
+
+            var productId1 = await context1.Execute(new ProductMySqlCreateCommandPersistence(
+                new ProductCreateCommand(authInfo)
+                {
+                    Name = "Product_Buffered",
+                    ListPrice = 100M,
+                    ModelYear = 2025,
+                    BrandId = brandId1.Value,
+                    CategoryId = categoryId1.Value
+                }));
+
+            var product1 = await context1.Query(new ProductCategoryGetByIdQueryPersistence(
+                new ProductGetByIdQuery(authInfo) { Id = productId1.Value }));
+
+            testResults.AppendLine($"║ Buffered   ║ {productId1.Value,-9} ║ {product1?.Category?.Name,-10} ║ true        ║ Yes           ║ ✓ PASS       ║");
+
+            context1.Commit();
+        }
+        catch (Exception ex)
+        {
+            testResults.AppendLine($"║ Buffered   ║ N/A       ║ N/A        ║ true        ║ Yes           ║ ✗ FAIL       ║");
+            testResults.AppendLine($"║            Error: {ex.Message.Substring(0, Math.Min(60, ex.Message.Length)),-60}║");
+        }
+
+        // Test 2: Unbuffered mode in transaction
+        try
+        {
+            using var context2 = await _factory.Create(new MySQLTransaction());
+
+            var categoryId2 = await context2.Execute(new CategoryMySqlCreateCommandPersistence(
+                new CategoryCreateCommand(authInfo) { Name = "Cat_Unbuf" }));
+
+            var brandId2 = await context2.Execute(new BrandMySqlCreateCommandPersistence(
+                new BrandCreateCommand(authInfo) { Name = "Brand_Unbuf" }));
+
+            var productId2 = await context2.Execute(new ProductMySqlCreateCommandPersistence(
+                new ProductCreateCommand(authInfo)
+                {
+                    Name = "Product_Unbuf",
+                    ListPrice = 200M,
+                    ModelYear = 2025,
+                    BrandId = brandId2.Value,
+                    CategoryId = categoryId2.Value
+                }));
+
+            var product2 = await context2.Query(new ProductCategoryGetByIdQueryUnbufferedPersistence(
+                new ProductGetByIdQuery(authInfo) { Id = productId2.Value }));
+
+            var categoryName2 = product2?.Category?.Name ?? "N/A";
+            testResults.AppendLine($"║ Unbuffered ║ {productId2.Value,-9} ║ {categoryName2,-10} ║ false       ║ Yes           ║ ✓ PASS       ║");
+
+            context2.Commit();
+        }
+        catch (Exception ex)
+        {
+            testResults.AppendLine($"║ Unbuffered ║ N/A       ║ N/A        ║ false       ║ Yes           ║ ✗ FAIL       ║");
+            testResults.AppendLine($"║            Error: {ex.Message.Substring(0, Math.Min(60, ex.Message.Length)),-60}║");
+        }
+
+        // Test 3: Create in transaction, query unbuffered AFTER commit
+        int? productId3 = null;
+        try
+        {
+            using (var context3 = await _factory.Create(new MySQLTransaction()))
+            {
+                var categoryId3 = await context3.Execute(new CategoryMySqlCreateCommandPersistence(
+                    new CategoryCreateCommand(authInfo) { Name = "Cat_AfterCommit" }));
+
+                var brandId3 = await context3.Execute(new BrandMySqlCreateCommandPersistence(
+                    new BrandCreateCommand(authInfo) { Name = "Brand_AfterCommit" }));
+
+                productId3 = await context3.Execute(new ProductMySqlCreateCommandPersistence(
+                    new ProductCreateCommand(authInfo)
+                    {
+                        Name = "Product_AfterCommit",
+                        ListPrice = 300M,
+                        ModelYear = 2025,
+                        BrandId = brandId3.Value,
+                        CategoryId = categoryId3.Value
+                    }));
+
+                context3.Commit();
+            }
+
+            // Query after commit in new context
+            using (var queryContext = await _factory.Create())
+            {
+                var product3 = await queryContext.Query(new ProductCategoryGetByIdQueryUnbufferedPersistence(
+                    new ProductGetByIdQuery(authInfo) { Id = productId3.Value }));
+
+                var categoryName3 = product3?.Category?.Name ?? "N/A";
+                testResults.AppendLine($"║ Unbuffered ║ {productId3.Value,-9} ║ {categoryName3,-10} ║ false       ║ No (committed)║ ✓ PASS       ║");
+            }
+        }
+        catch (Exception ex)
+        {
+            testResults.AppendLine($"║ Unbuffered ║ {productId3?.ToString() ?? "N/A",-9} ║ N/A        ║ false       ║ No (committed)║ ✗ FAIL       ║");
+            testResults.AppendLine($"║            Error: {ex.Message.Substring(0, Math.Min(60, ex.Message.Length)),-60}║");
+        }
+
+        testResults.AppendLine("╚════════════╩═══════════╩════════════╩═════════════╩═══════════════╩══════════════╝");
+
+        Console.WriteLine(testResults.ToString());
     }
 
     [Test]

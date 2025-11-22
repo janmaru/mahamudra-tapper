@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "El
 		Data\entrypoint.sh = Data\entrypoint.sh
 		Data\mssql_setup.sql = Data\mssql_setup.sql
 		Data\mysql_setup.sql = Data\mysql_setup.sql
+		PERFORMANCE_ANALYSIS.md = PERFORMANCE_ANALYSIS.md
 		.claude\project.md = .claude\project.md
 		README.md = README.md
 		.claude\settings.local.json = .claude\settings.local.json

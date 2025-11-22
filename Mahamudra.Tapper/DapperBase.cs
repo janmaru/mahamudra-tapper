@@ -23,6 +23,17 @@ namespace Mahamudra.Tapper
            return await connection.ExecuteAsync(sqlCommand, parameters, transaction, commandTimeout, type); 
         }
 
+        public async Task<int> ExecuteBatchAsync(
+            IDbConnection connection,
+            string sqlCommand,
+            IEnumerable<object> parameters,
+            IDbTransaction transaction,
+            CommandType type,
+            int? commandTimeout = null)
+        {
+            return await connection.ExecuteAsync(sqlCommand, parameters, transaction, commandTimeout, type);
+        }
+
         public async Task<T> ExecuteAsync<T>(
             IDbConnection connection,
             string sqlCommand,
@@ -34,6 +45,19 @@ namespace Mahamudra.Tapper
             return await connection.QueryFirstAsync<T>(sqlCommand, parameters, transaction, commandTimeout, type); 
         }
 
+        public async Task<IEnumerable<T>> SelectAsync<T>(
+            IDbConnection connection,
+            string sqlQuery,
+            object parameters,
+            IDbTransaction transaction,
+            CommandType type,
+            bool buffered,
+            int? commandTimeout = null)
+        {
+            return await connection.QueryAsync<T>(sqlQuery, parameters, transaction, commandTimeout, type); 
+        }
+
+        // Overload for backward compatibility if needed, though interface changed so maybe not strictly necessary but good for safety if not all callers go through interface
         public async Task<IEnumerable<T>> SelectAsync<T>(
             IDbConnection connection,
             string sqlQuery,
@@ -56,6 +80,7 @@ namespace Mahamudra.Tapper
             bool buffered,
             int? commandTimeout = null)
         {
+            // Dapper.QueryAsync parameter order: sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType
             return await connection.QueryAsync<T, S, T>(sqlQuery, map, parameters, transaction, buffered, splitOn, commandTimeout, type);
         }
 

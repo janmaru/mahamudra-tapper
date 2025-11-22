@@ -7,7 +7,9 @@
       "Bash(dir /S /B Products)",
       "Bash(dotnet build Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj)",
       "Bash(dotnet test Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj --verbosity normal)",
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(dotnet test:*)",
+      "Bash(Select-String -Pattern \"SQL:|Category ID:|Brand ID:|Product ID:|Querying|No columns\" -Context 0,2)"
     ],
     "deny": []
   }
