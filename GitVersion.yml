@@ -1,8 +1,7 @@
-next-version: 1.0.1
 branches:
   main:
     regex: ^main$
-    mode: ContinuousDelivery
+    mode: ManualDeployment
     label: ''
     increment: Patch
   feature:
