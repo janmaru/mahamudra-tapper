@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<RootNamespace>Mahamudra.Tapper</RootNamespace>
+		<AssemblyName>Mahamudra.Tapper</AssemblyName>
+		<Version>1.0.1</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Authors>marujan</Authors>
+		<Description>Tapper. The last library that wraps Dapper, ever.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageIcon>lotus-flower.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/janmaru/mahamudra-tapper</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/janmaru/mahamudra-tapper</PackageProjectUrl>
+		<PackageTags>dapper;wrapper</PackageTags>
+		<PackageReleaseNotes>Initial release with .NET Standard 2.1</PackageReleaseNotes>
+		<IsPackable>true</IsPackable>
+		<PackageId>Mahamudra.Tapper</PackageId>
+		<Product>Mahamudra.Tapper</Product>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.1.66" />
+		<PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="lotus-flower.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

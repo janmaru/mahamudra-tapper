@@ -1,0 +1,11 @@
+branches:
+  main:
+    regex: ^main$
+    mode: ManualDeployment
+    label: ''
+    increment: Patch
+  feature:
+    regex: ^features?[/-]
+    mode: ContinuousDelivery
+    label: alpha
+    increment: Minor

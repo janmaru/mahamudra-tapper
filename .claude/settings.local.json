@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet test)",
+      "Bash(dir /S /B Categories)",
+      "Bash(dir /S /B Stores)",
+      "Bash(dir /S /B Products)",
+      "Bash(dotnet build Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj)",
+      "Bash(dotnet test Mahamudra.Tapper.Tests/Mahamudra.Tapper.Tests.csproj --verbosity normal)",
+      "Bash(nul)",
+      "Bash(dotnet test:*)",
+      "Bash(Select-String -Pattern \"SQL:|Category ID:|Brand ID:|Product ID:|Querying|No columns\" -Context 0,2)",
+      "Bash(docker compose:*)",
+      "Bash(dotnet build:*)",
+      "Bash(where:*)",
+      "Bash(powershell -Command \"Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::OpenRead(''Mahamudra.Tapper.1.0.3-1.nupkg'').Entries | Select-Object FullName\")",
+      "Bash(powershell -Command \"$zip = [System.IO.Compression.ZipFile]::OpenRead(''Mahamudra.Tapper.1.0.3-1.nupkg''); $entry = $zip.Entries | Where-Object {$_Name -eq ''Mahamudra.Tapper.nuspec''}; $stream = $entry.Open(); $reader = New-Object System.IO.StreamReader($stream); $content = $reader.ReadToEnd(); $reader.Close(); $stream.Close(); $zip.Dispose(); $content\")",
+      "Bash(copy:*)",
+      "Bash(powershell -Command \"Expand-Archive -Path ''temp.zip'' -DestinationPath ''temp_extract'' -Force\")"
+    ],
+    "deny": []
+  }
+}

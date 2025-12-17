@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mahamudra.Tapper", "Mahamudra.Tapper\Mahamudra.Tapper.csproj", "{B413CD4A-2DD5-4053-90DE-9D931C84035C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mahamudra.Tapper.Tests", "Mahamudra.Tapper.Tests\Mahamudra.Tapper.Tests.csproj", "{7AF49A6B-7E69-454D-8A4E-ADEBB1552FCD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{73E30F9D-DA66-475D-BDE9-FC2E8B72D499}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+		docker-compose.yml = docker-compose.yml
+		Dockerfile.tests = Dockerfile.tests
+		Data\entrypoint.sh = Data\entrypoint.sh
+		Data\mssql_setup.sql = Data\mssql_setup.sql
+		Data\mysql_setup.sql = Data\mysql_setup.sql
+		PERFORMANCE_ANALYSIS.md = PERFORMANCE_ANALYSIS.md
+		.claude\project.md = .claude\project.md
+		README.md = README.md
+		.claude\settings.local.json = .claude\settings.local.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B413CD4A-2DD5-4053-90DE-9D931C84035C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B413CD4A-2DD5-4053-90DE-9D931C84035C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B413CD4A-2DD5-4053-90DE-9D931C84035C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B413CD4A-2DD5-4053-90DE-9D931C84035C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AF49A6B-7E69-454D-8A4E-ADEBB1552FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF49A6B-7E69-454D-8A4E-ADEBB1552FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF49A6B-7E69-454D-8A4E-ADEBB1552FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF49A6B-7E69-454D-8A4E-ADEBB1552FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAB54C00-3FB1-4FB5-B575-2701C5792092}
+	EndGlobalSection
+EndGlobal
