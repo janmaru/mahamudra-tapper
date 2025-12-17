@@ -488,7 +488,7 @@ public class TestsDbMSSQLContext
         {
             var product = await context.Query(new ProductGetByIdQueryPersistence(new ProductGetByIdQuery(authInfo)
             {
-                Id = productId.Value
+                Id = productId
             }));
             Assert.That(product, Is.Not.Null);
         }
@@ -519,7 +519,7 @@ public class TestsDbMSSQLContext
 
         using var verifyContext = await _factory.Create();
         var categories = await verifyContext.Query(new BrandCategoryGetAllByQueryPersistence());
-        var foundCategory = categories.Categories?.Any(c => c.Name == expectedCategoryName) ?? false;
+        var foundCategory = categories!.Categories?.Any(c => c.Name == expectedCategoryName) ?? false;
         Assert.That(foundCategory, Is.False);
     }
 

@@ -9,7 +9,7 @@
 		<Description>Tapper. The last library that wraps Dapper, ever.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageIcon>lotus-flower.png</PackageIcon>
-		<PackageReadme>README.md</PackageReadme>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/janmaru/mahamudra-tapper</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/janmaru/mahamudra-tapper</PackageProjectUrl>
 		<PackageTags>dapper;wrapper</PackageTags>
@@ -34,6 +34,7 @@
 		<None Include="..\README.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

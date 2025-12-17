@@ -33,6 +33,7 @@ WHERE  product_id = @id;
         var sql = _sqlSelectWithBuilder.Add(schema);
         // or choose
         // _sqlSelect.Add(schema)
+
         var dto = (await ((IPersistence)this).SelectAsync<ProductDto, Category>(
             connection!,
             sql,

@@ -50,7 +50,7 @@ This project implements **Clean Architecture** with **Domain-Driven Design (DDD)
 - Dependencies: `Dapper 2.1.28`
 
 **Test Project:**
-- Target Framework: `net9.0`
+- Target Framework: `net10.0`
 - Database Drivers: `MySql.Data 8.3.0`, `Microsoft.Data.SqlClient 5.1.4`
 - Test Framework: `NUnit 4.0.1`
 - Additional Features: `Mediator 2.1.7` (high-performance source generator), `Dapper.SqlBuilder 2.0.78`
